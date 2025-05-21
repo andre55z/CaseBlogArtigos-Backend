@@ -1,10 +1,11 @@
 import express from "express";
-
+import roteador from './routes/user.routes'
 
 const myApp = express();       //Instanciação do Express
 const myPort = 3000;          //Porta do servidor
 
 myApp.use(express.json());  //middleware que entende requisições com JSON
+myApp.use('/api/users', roteador);      //as rotas do user ficam disponiveis em /api/users
 
 myApp.get('/', (req, res) => {res.send('Servidor em funcionamento');});  //Ao acessar a porta, essa função será chamada. Teste de rota.
 
@@ -17,6 +18,8 @@ myApp.listen(myPort, () => {
 //Se der certo, retornará o sucesso da conexão e o resultado de 1+1
 //Se não, retornará o fracasso 
 import { BD } from './database/database';
+
+
 
 (async () => {
   try {
