@@ -16,4 +16,6 @@ roteador.put("/posts", autenticarJWT, upload.single("imagem"), postCntrl.atualiz
 
 roteador.delete("/posts", autenticarJWT, postCntrl.deletando as (req: Router.Request, res: Router.Response) => Promise<any>);
 
+roteador.get("/posts", postCntrl.listar as (req: Router.Request, res: Router.Response) => Promise<any>);
+
 export default roteador;
