@@ -1,6 +1,6 @@
-# 🧠 Blog API - Backend
+# 🧠 BlogArtigos - Backend
 
-Este é o backend de uma aplicação de blog com autenticação JWT, escrita em Node.js, Express e TypeScript. Os dados são armazenados em um banco MySQL, e as senhas são protegidas com `bcrypt`.
+Este é o backend de uma aplicação de blog de artigos com autenticação JWT, escrita em Node.js, Express e TypeScript. Os dados são armazenados em um banco MySQL, e as senhas são protegidas com `bcrypt`.
 
 ## 🔧 Tecnologias
 
