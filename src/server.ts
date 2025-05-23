@@ -1,16 +1,27 @@
 import express from "express";
+import cors from 'cors'
 import roteador from './routes/user.routes'
+import roteadorPost from './routes/post.routes' 
 
 const myApp = express();       //Instanciação do Express
 const myPort = 3000;          //Porta do servidor
+myApp.use(cors({
+  origin: 'http://localhost:5173', // URL do seu frontend
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+myApp.use(cors())
 
 myApp.use(express.json());  //middleware que entende requisições com JSON
-myApp.use('/api/users', roteador);      //as rotas do user ficam disponiveis em /api/users
+myApp.use('/api/user', roteador);      //as rotas do user ficam disponiveis em /api/users
+myApp.use('/api/post', roteadorPost)
 
-myApp.get('/', (req, res) => {res.send('Servidor em funcionamento');});  //Ao acessar a porta, essa função será chamada. Teste de rota.
 
+
+myApp.get('/', (req, res) => {res.send('Servidor em funcionamento');});  
 myApp.listen(myPort, () => {
-  console.log(`Servidor está rodando em http://localhost:${myPort}`);     //Define que o servidor deve ouvir a porta 3000, devolvendo a função em tese no terminal
+  console.log(`Servidor está rodando em http://localhost:${myPort}`);     
 });
 
 

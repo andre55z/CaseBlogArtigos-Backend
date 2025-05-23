@@ -17,3 +17,18 @@ export const deletePost = async (id_post:number, id_usuario:number) =>
         const [resultado] = await BD.execute('DELETE FROM posts WHERE id_post = ?', [id_post]);
         return resultado;
     };
+export const listarPosts = async () => {
+  const [resultado] = await BD.execute('SELECT * FROM posts') as any[];
+
+
+  const postsComImagemConvertida = resultado.map((post: any) => {
+    if (post.imagem) {
+      const base64Image = post.imagem.toString('base64');
+      const mimeType = 'image/jpeg'; 
+      post.imagem = `data:${mimeType};base64,${base64Image}`;
+    }
+    return post;
+  });
+
+  return postsComImagemConvertida;
+};

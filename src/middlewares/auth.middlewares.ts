@@ -21,9 +21,9 @@ export const autenticarJWT = (
 
   try {
     const segredo = process.env.JWT_SECRET || "segredo123";
-    const payload = jwt.verify(token, segredo) as { userId: number };
+    const payload = jwt.verify(token, segredo) as { id: number };
 
-    (req as any).userId = payload.userId;
+    (req as any).userId = payload.id;
 
     next(); // Continua a execução
   } catch (error) {

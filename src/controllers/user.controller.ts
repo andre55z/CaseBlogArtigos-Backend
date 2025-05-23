@@ -2,7 +2,8 @@ import { Request, Response } from "express";    //Importa o tratamento de requis
 import { User }from "../models/user.model"    // Importa o modelo de usuario criado na pasta "models"
 import { BD } from "../database"                 // importa a Pool que estabelece conexão com o banco de dados               
 import bcrypt from 'bcrypt';                     // Importa o bcrypt
-import Jwt  from "jsonwebtoken";                //importa o JWT para a geração de token
+import Jwt  from "jsonwebtoken";               //importa o JWT para a geração de token
+
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -16,8 +17,8 @@ if (!nomeusuario || !email || !senha)
         return res.status(400).json({message: 'Preencha todos os campos.'});
     }
 try{
-    const [existing] = await BD.query('SELECT * FROM usuarios WHERE email = ?', [email]);   //verifiica se o email ja existe no banco
-    if ((existing as any[]).length > 0)
+    const [rows]: any= await BD.query('SELECT * FROM usuarios WHERE email = ?', [email]);   //verifiica se o email ja existe no banco
+    if (rows.length > 0)
         {
             return res.status(409).json({message: 'Email ja cadastrado!'});
         }
@@ -48,7 +49,7 @@ export const loginUsuario = async (req: Request, res: Response) =>       //expor
                 return res.status(400).json({message:'Preencha todos os campos'});
             } 
         try{
-            const [rows] = await BD.query('SELECT * FROM usuarios WHERE email = ?', [email]) as any[];                       //buscando os dados no banco
+            const [rows]: any = await BD.query('SELECT * FROM usuarios WHERE email = ?', [email]);                       //buscando os dados no banco
             
 
             if(rows.length === 0)                                                                       //verificando se os dados existem no bd
@@ -78,6 +79,39 @@ export const loginUsuario = async (req: Request, res: Response) =>       //expor
             return res.status(500).json({message: 'Erro ao fazer login'});                                      //retorno de uma falha
         }
     };
+
+export const esqueciSenha = async (req: Request, res:Response)=>
+    {
+        const {email, senha, senhaConfirmada} = req.body;
+
+        if(!email || !senha)
+            {
+                return res.status(400).json({message:'Preencha todos os campos!'})
+            }
+        if(senha !== senhaConfirmada)
+            {
+                return res.status(400).json({message:'Senhas diferentes!'})
+
+            }
+        const [rows]: any = await BD.query('SELECT * FROM usuarios WHERE email = ?', [email]);
+
+        if(rows.length === 0)
+            {
+                return res.status(409).json({message: 'Email não cadastrado'});
+            }
+        
+        try
+        {
+            const SenhaEncript = await bcrypt.hash(senhaConfirmada, 10);
+            await BD.query('UPDATE usuarios SET senha = ? WHERE email = ?', [SenhaEncript, email]);
+            return res.status(200).json({message:'Senha redefinida!'});
+        }
+        catch(erro)
+        {
+            console.error(erro);
+            return res.status(500).json({message:'Erro ao trocar senha'});
+        }
+    }
 
 
 
